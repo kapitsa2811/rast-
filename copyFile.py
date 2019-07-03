@@ -2,12 +2,12 @@ import os
 from shutil import copy2
 import cv2
 import pandas as pd
-
+import sys
 
 basePath="/home/kapitsa/PycharmProjects/cartoon/dataset/rast/"
 dirs=["Batman","GreenLantern","Spiderman","WonderWoman"]
-dirs=["Batman","GreenLantern","Spiderman","WonderWoman"]
-indx=1
+#dirs=["Batman"]
+indx=0
 sourceDirPath=basePath+dirs[indx]
 subFolders=os.listdir(sourceDirPath)
 print("\n\t subFolders=",subFolders)
@@ -99,8 +99,8 @@ for dirName in dirs:
     try:
         os.mkdir(writePath+"train//"+dirName)
         os.mkdir(writePath+"test//"+dirName)
-    except Exception as e:
-        print("\n\t exception-",e)
+    except Exception as e1:
+        print("\n\t exception-",e1)
 
 '''
     write train files
@@ -108,32 +108,88 @@ for dirName in dirs:
 print("\n\t columns=",xTrain.columns)
 
 expCount=0
+
+print("\n\t ")
+
+
+
 for (indx,name) in enumerate(xTrain.iterrows()):
 
     try:
         #print("\n\t indx=",indx,"\n\t name \n:",name)
-        #print("\n\t indx=",indx,"\n\t name \n:",name[4])
-        imageName=xTrain.loc[indx,"fileName"]
-        path=xTrain.loc[indx,"entirepath"]
-        cl=yTrain.loc[indx,"label"]
-        print("\n\t imageName=",imageName)
-        print("\n\t label=",cl)
-        print("\n\t path=",path)
+        #print("\n\t indx=",indx)#,"\n\t name \n:",name)
+        imageName=xTrain.iloc[indx,1]
+        #imageName=xTrain.loc[indx,"fileName"]
+        #path=xTrain.loc[indx,"entirepath"]
+
+        path=xTrain.iloc[indx,5]
+        #cl=yTrain.loc[indx,"label"]
+
+        cl=yTrain.iloc[indx,0]
+        # print("\n\t imageName=",imageName)
+        # print("\n\t label=",cl)
+        # print("\n\t path=",path)
 
         image=cv2.imread(path)
         cv2.imwrite(writePath+"//train//"+cl+"//"+imageName,image)
         #input("check")
-    except Exception as e:
-        import sys
+        imageName=""
+    except Exception as e1:
+
         expCount=expCount+1
         print("\n\t expCount=",expCount)
-        print("\n\t name=",imageName)
-        print("\n\t e=",e)
+        #print("\n\t name=",imageName)
+        print("\n\t e=",e1)
 
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print("\n\t line no-", exc_tb.tb_lineno)
 
+        print("\n\t indx=",indx)
+        print("\n\t values=",xTrain.loc[indx,"fileName"])
+        input("check")
+
+
 '''
     write test files
 '''
+
+for (indx,name) in enumerate(xTest.iterrows()):
+
+    try:
+        #print("\n\t indx=",indx,"\n\t name \n:",name)
+        #print("\n\t indx=",indx)#,"\n\t name \n:",name)
+        imageName=xTest.iloc[indx,1]
+        #imageName=xTrain.loc[indx,"fileName"]
+        #path=xTrain.loc[indx,"entirepath"]
+
+        path=xTest.iloc[indx,5]
+        #cl=yTrain.loc[indx,"label"]
+
+        cl=yTest.iloc[indx,0]
+        # print("\n\t imageName=",imageName)
+        # print("\n\t label=",cl)
+        # print("\n\t path=",path)
+
+        image=cv2.imread(path)
+
+        #print("\n\t type=",type(image),'\t cl=',cl,"\t imageName=",imageName)
+
+        cv2.imwrite(writePath+"//test//"+cl+"//"+imageName,image)
+        #input("check")
+        imageName=""
+    except Exception as e1:
+
+        expCount=expCount+1
+        print("\n\t expCount=",expCount)
+        #print("\n\t name=",imageName)
+        print("\n\t e=",e1)
+
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print("\n\t line no-", exc_tb.tb_lineno)
+
+        print("\n\t indx=",indx)
+        print("\n\t values=",xTest.iloc[indx,1])
+        input("check")
+
